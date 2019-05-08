@@ -15,7 +15,7 @@ server.use(morgan('short'));//morgan('dev') // third-party middleware give all i
 //adding custom middleware
 function upper(req, res, next) {
     console.log(req.query.name);
-    //You can access query from URL passed with '?' like ...http://localhost:5000/name/?name = hello
+    //You can access query from URL passed with '?' like ...http://localhost:5000/name/?name= 'hello........'(to work query string there should be space between name and equal sign)
     const nameRecived = req.query.name || 'this is a test';
     req.upper = nameRecived.toUpperCase();
     console.log(req.upper);
