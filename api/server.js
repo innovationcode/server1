@@ -2,6 +2,8 @@
 const express = require("express");
 const server = express();
 const morgan = require("morgan")
+const helmet = require("helmet")
+const cors = require("cors")
 
 //middleware to change or verify data between request and response
 //Three-types middleware
@@ -9,17 +11,24 @@ const morgan = require("morgan")
 //third party
 //custom 
 //can use middlewares globally by using 'server.use(middleware)' or locally by mentioning that middleware for that particular route
+//whatever in server.use() will be middlewares.............
 server.use(express.json()); //built-in middleware
 server.use(morgan('short'));//morgan('dev') // third-party middleware give all info about request received .. so if needed can be saved to database
-
+server.use(helmet()); //Helmet can help protect your app from some well-known web vulnerabilities and secure our web applications.
+server.use(cors()); //Cross-origin resource sharing (CORS) is a mechanism that allows restricted resources
+//ORDER MATTERS FOR MIDDLEWARE ... SO THEY SHOULD BE PLACED IN ORDER 1. REQUEST : HELMET 2. SECURITY : HELMET....
 //adding custom middleware
 function upper(req, res, next) {
     console.log(req.query.name);
     //You can access query from URL passed with '?' like ...http://localhost:5000/name/?name= 'hello........'(to work query string there should be space between name and equal sign)
-    const nameRecived = req.query.name || 'this is a test';
-    req.upper = nameRecived.toUpperCase();
-    console.log(req.upper);
-    next();
+    const nameRecived = req.query.name;
+    if(nameRecived) {
+        req.upper = nameRecived.toUpperCase();
+        console.log(req.upper);
+        next();
+    } else {
+        res.status(400).send("Please provide ..name...");
+    }
 }
 server.use(upper);
 
