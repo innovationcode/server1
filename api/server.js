@@ -2,6 +2,11 @@
 const express = require("express");
 const server = express();
 
+//router
+const productRouters = require('./routers/productRouters');
+const clientRouters = require('./routers/clientRouters');
+
+
 //middleware from ../config built-in and third-party
 const configMiddleware = require('../config/middleware.js')
 configMiddleware(server);
@@ -9,6 +14,11 @@ configMiddleware(server);
 //custom middleware from ../common 
 customMiddleware = require('../common/customMiddleware.js')
 
+
+//when ever there is '/products...' requests comes use productRouter which contains endpoint from '../api/routers/productRouters.js'
+server.use('/products', productRouters);
+//similarly for '/clients' route...
+server.use('/clients', clientRouters);
 
 //routes... to give response according to request received 
 server.get('/', (req, res) => {
